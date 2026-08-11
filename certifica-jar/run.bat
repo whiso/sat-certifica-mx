@@ -1,6 +1,6 @@
 @echo off
 rem Windows launcher (scaffold). Prefer launcher.ps1.
-setlocal
+setlocal EnableExtensions EnableDelayedExpansion
 set ROOT=%~dp0..
 set APP=%ROOT%\certifica-jar
 set CACHE=%ROOT%\.cache
@@ -21,13 +21,13 @@ if not exist "%APP%\Certifica-64bits.jar.sha256" (
 for /f "usebackq tokens=1" %%H in ("%APP%\Certifica-64bits.jar.sha256") do set "EXPECTED=%%H"
 
 set "ACTUAL="
-for /f "delims=" %%H in (`certutil -hashfile "%APP%\Certifica-64bits.jar" SHA256 ^| findstr /v ":"`) do call set "ACTUAL=%%ACTUAL%%%%H"
-set "ACTUAL=%ACTUAL: =%"
+for /f "delims=" %%H in (`certutil -hashfile "%APP%\Certifica-64bits.jar" SHA256 ^| findstr /v ":"`) do set "ACTUAL=!ACTUAL!%%H"
+set "ACTUAL=!ACTUAL: =!"
 
-if /i not "%EXPECTED%"=="%ACTUAL%" (
+if /i not "!EXPECTED!"=="!ACTUAL!" (
     echo [launcher] ERROR: Hash verification FAILED. Jar corrupt or modified.
-    echo [launcher] expected: %EXPECTED%
-    echo [launcher] actual:   %ACTUAL%
+    echo [launcher] expected: !EXPECTED!
+    echo [launcher] actual:   !ACTUAL!
     exit /b 1
 )
 echo [launcher] Hash OK

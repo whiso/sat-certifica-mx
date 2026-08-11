@@ -1,5 +1,5 @@
 @echo off
-setlocal EnableExtensions
+setlocal EnableExtensions EnableDelayedExpansion
 set "ROOT=%~dp0"
 set "APPDIR=%ROOT%certifica-jar"
 set "JAVA=%ROOT%jre\bin\java.exe"
@@ -19,13 +19,13 @@ set "EXPECTED="
 for /f "usebackq tokens=1" %%a in ("Certifica-64bits.jar.sha256") do set "EXPECTED=%%a"
 
 set "ACTUAL="
-for /f "delims=" %%i in ('certutil -hashfile Certifica-64bits.jar SHA256 ^| findstr /v ":"') do call set "ACTUAL=%%ACTUAL%%%%i"
-set "ACTUAL=%ACTUAL: =%"
+for /f "delims=" %%i in ('certutil -hashfile Certifica-64bits.jar SHA256 ^| findstr /v ":"') do set "ACTUAL=!ACTUAL!%%i"
+set "ACTUAL=!ACTUAL: =!"
 
-if /i not "%EXPECTED%"=="%ACTUAL%" (
+if /i not "!EXPECTED!"=="!ACTUAL!" (
   echo [Certifica] ERROR: verificacion SHA-256 FALLO. El jar esta corrupto o fue modificado. Re-descarga el paquete.
-  echo [Certifica] esperado: %EXPECTED%
-  echo [Certifica] obtenido: %ACTUAL%
+  echo [Certifica] esperado: !EXPECTED!
+  echo [Certifica] obtenido: !ACTUAL!
   exit /b 1
 )
 echo [Certifica] Integridad verificada (SHA-256 OK)
