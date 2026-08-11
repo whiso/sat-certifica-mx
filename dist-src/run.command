@@ -20,10 +20,10 @@ file "$JAVA" | grep -q x86_64 || die "El JRE incluido no es x86_64. Re-descarga 
 
 xattr -dr com.apple.quarantine "$DIR" 2>/dev/null || true
 
-[ -f "$APP_DIR/Certifica-32bits.jar" ] || die "Falta certifica-jar/Certifica-32bits.jar"
-(cd "$APP_DIR" && shasum -a 256 -c Certifica-32bits.jar.sha256 >/dev/null 2>&1) \
+[ -f "$APP_DIR/Certifica-64bits.jar" ] || die "Falta certifica-jar/Certifica-64bits.jar"
+(cd "$APP_DIR" && shasum -a 256 -c Certifica-64bits.jar.sha256 >/dev/null 2>&1) \
   || die "Verificacion SHA-256 FALLO. El jar esta corrupto o fue modificado. Re-descarga el paquete."
 warn "Integridad verificada (SHA-256 OK)"
 
 cd "$APP_DIR"
-exec "$JAVA" -Xdock:name="Certifica" -Dapple.awt.graphics.UseQuartz=true -jar Certifica-32bits.jar "$@"
+exec "$JAVA" -Xdock:name="Certifica" -Dapple.awt.graphics.UseQuartz=true -jar Certifica-64bits.jar "$@"

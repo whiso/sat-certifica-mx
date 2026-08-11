@@ -1,6 +1,8 @@
 # sat-certifica-mx
 
-Launcher para `certifica-jar/Certifica-32bits.jar` (SAT), app Java 8 legacy con Swing/SWT, en Apple Silicon y Windows.
+Launcher para `certifica-jar/Certifica-64bits.jar` (SAT), app Java 8 legacy con Swing/SWT, en Apple Silicon y Windows.
+
+> **Nota**: el jar anterior `Certifica-32bits.jar` quedó deprecado y fue eliminado del repo: sus libs SWT de 32 bits no cargan en un JVM de 64 bits en Windows (`cannot load 32-bit SWT libraries`). El jar de 64 bits lo reemplaza en ambas plataformas.
 
 ## Descarga directa (recomendado para usuarios)
 
@@ -36,8 +38,8 @@ El launcher:
   2. `.cache/jdk8-x64/` (Temurin ya descargado)
   3. Descarga Temurin JDK 8 x64 desde Adoptium a `.cache/`
 - Rechaza JDK arm64: los libs nativos JNA del jar no tienen slice arm64; el JVM debe ser x64 bajo Rosetta.
-- Quita flag `com.apple.quarantine` de `Certifica-32bits.jar`.
-- Verifica integridad del jar contra `certifica-jar/Certifica-32bits.jar.sha256` (SHA-256) antes de ejecutarlo. Si falla, aborta con error.
+- Quita flag `com.apple.quarantine` de `Certifica-64bits.jar`.
+- Verifica integridad del jar contra `certifica-jar/Certifica-64bits.jar.sha256` (SHA-256) antes de ejecutarlo. Si falla, aborta con error.
 
 #### Por qué JDK 8 x64 + Rosetta
 
@@ -59,26 +61,26 @@ rem o
 powershell -ExecutionPolicy Bypass -File launcher.ps1
 ```
 
-Mismo orden de búsqueda de JDK: `CERTIFICA_JAVA_HOME` → `.cache\jdk8-x64\` (Temurin win x64) → `java` del PATH. El jar trae los libs JNA/SWT win32-x86-64, por lo que debería correr sin cambios. No probado aún.
+Mismo orden de búsqueda de JDK: `CERTIFICA_JAVA_HOME` → `.cache\jdk8-x64\` (Temurin win x64) → `java` del PATH. El jar de 64 bits trae los libs JNA/SWT win32-x86-64 y requiere JVM de 64 bits. El launcher sigue siendo scaffold; el empaquetado portable (`Certifica-Windows-x64.zip`) es la vía recomendada.
 
 ## Verificación de integridad
 
-El launcher verifica el SHA-256 del jar antes de ejecutar. Archivo de hash: `certifica-jar/Certifica-32bits.jar.sha256`.
+El launcher verifica el SHA-256 del jar antes de ejecutar. Archivo de hash: `certifica-jar/Certifica-64bits.jar.sha256`.
 
 Regenerar tras reemplazar el jar:
 
 ```bash
 cd certifica-jar
-shasum -a 256 Certifica-32bits.jar > Certifica-32bits.jar.sha256
+shasum -a 256 Certifica-64bits.jar > Certifica-64bits.jar.sha256
 ```
 
 Verificación manual:
 
 ```bash
-cd certifica-jar && shasum -a 256 -c Certifica-32bits.jar.sha256
+cd certifica-jar && shasum -a 256 -c Certifica-64bits.jar.sha256
 ```
 
-Windows (PowerShell): `Get-FileHash -Algorithm SHA256 certifica-jar\Certifica-32bits.jar`
+Windows (PowerShell): `Get-FileHash -Algorithm SHA256 certifica-jar\Certifica-64bits.jar`
 
 ## Docker
 
@@ -88,5 +90,5 @@ Posible pero no recomendado para uso interactivo: requiere XQuartz + `DISPLAY`, 
 
 - **`Rosetta 2 not installed`**: `softwareupdate --install-rosetta --agree-to-license`
 - **`is not x86_64`**: el JDK detectado es arm64; apunta `CERTIFICA_JAVA_HOME` a un JDK 8 x64.
-- **Bloqueado por Gatekeeper**: el launcher quita el quarantine automáticamente; si sigue bloqueado: `xattr -dr com.apple.quarantine certifica-jar/Certifica-32bits.jar`
+- **Bloqueado por Gatekeeper**: el launcher quita el quarantine automáticamente; si sigue bloqueado: `xattr -dr com.apple.quarantine certifica-jar/Certifica-64bits.jar`
 - **Crashes con `UnsatisfiedLinkError`**: confirmar que el JDK usado es x86_64 (`file $(dirname $(which java))/java`).

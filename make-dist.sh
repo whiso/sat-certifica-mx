@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_DIR="$SCRIPT_DIR/certifica-jar"
-JAR="$APP_DIR/Certifica-32bits.jar"
+JAR="$APP_DIR/Certifica-64bits.jar"
 SRC_DIR="$SCRIPT_DIR/dist-src"
 DIST_DIR="$SCRIPT_DIR/dist"
 BUILD_DIR="$DIST_DIR/build"
@@ -23,7 +23,7 @@ command -v unzip >/dev/null 2>&1 || die "unzip requerido"
 [ -d "$SRC_DIR" ] || die "No se encuentra dist-src/"
 
 log "Verificando integridad del jar..."
-(cd "$APP_DIR" && shasum -a 256 -c Certifica-32bits.jar.sha256 >/dev/null) \
+(cd "$APP_DIR" && shasum -a 256 -c Certifica-64bits.jar.sha256 >/dev/null) \
   || die "La verificacion SHA-256 del jar FALLO. Aborta."
 
 SUFFIX=""
@@ -45,7 +45,7 @@ fetch_jre() { # $1=os (mac|windows)  $2=out-file
 
 copy_app() { # $1=stage-dir
   mkdir -p "$1/certifica-jar"
-  cp "$JAR" "$APP_DIR/Certifica-32bits.jar.sha256" "$1/certifica-jar/"
+  cp "$JAR" "$APP_DIR/Certifica-64bits.jar.sha256" "$1/certifica-jar/"
   cp "$SRC_DIR/LEEME.txt" "$1/LEEME.txt"
 }
 

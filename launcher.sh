@@ -3,8 +3,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_DIR="$SCRIPT_DIR/certifica-jar"
-JAR="$APP_DIR/Certifica-32bits.jar"
-HASH_FILE="$APP_DIR/Certifica-32bits.jar.sha256"
+JAR="$APP_DIR/Certifica-64bits.jar"
+HASH_FILE="$APP_DIR/Certifica-64bits.jar.sha256"
 CACHE_DIR="$SCRIPT_DIR/.cache"
 JDK_CACHE="$CACHE_DIR/jdk8-x64"
 ADOPTIUM_API="https://api.adoptium.net/v3/binary/latest/8/ga/mac/x64/jdk/hotspot/normal/eclipse"
@@ -53,10 +53,10 @@ find_jdk() {
   download_jdk
 }
 
-[ -f "$JAR" ] || die "Certifica-32bits.jar not found at $JAR"
+[ -f "$JAR" ] || die "Certifica-64bits.jar not found at $JAR"
 [ -f "$HASH_FILE" ] || die "Hash file not found at $HASH_FILE"
 
-if ! (cd "$APP_DIR" && shasum -a 256 -c Certifica-32bits.jar.sha256 >/dev/null 2>&1); then
+if ! (cd "$APP_DIR" && shasum -a 256 -c Certifica-64bits.jar.sha256 >/dev/null 2>&1); then
   die "Hash verification FAILED. $JAR is corrupt or was modified. Re-download the original jar or regenerate the hash."
 fi
 warn "Hash OK"
@@ -71,4 +71,4 @@ verify_jdk "$JAVA_HOME"
 warn "Using JDK: $JAVA_HOME"
 
 cd "$APP_DIR"
-exec "$JAVA_HOME/bin/java" -Xdock:name="Certifica-32bits" -Dapple.awt.graphics.UseQuartz=true -jar Certifica-32bits.jar "$@"
+exec "$JAVA_HOME/bin/java" -Xdock:name="Certifica-64bits" -Dapple.awt.graphics.UseQuartz=true -jar Certifica-64bits.jar "$@"

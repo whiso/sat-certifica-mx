@@ -3,13 +3,13 @@ $ErrorActionPreference = 'Stop'
 
 $Root    = Split-Path -Parent $MyInvocation.MyCommand.Path
 $AppDir  = Join-Path $Root 'certifica-jar'
-$Jar     = Join-Path $AppDir 'Certifica-32bits.jar'
-$HashFile = Join-Path $AppDir 'Certifica-32bits.jar.sha256'
+$Jar     = Join-Path $AppDir 'Certifica-64bits.jar'
+$HashFile = Join-Path $AppDir 'Certifica-64bits.jar.sha256'
 $Cache   = Join-Path $Root '.cache'
 $JdkCache = Join-Path $Cache 'jdk8-x64'
 $AdoptiumApi = 'https://api.adoptium.net/v3/binary/latest/8/ga/windows/x64/jdk/hotspot/normal/eclipse'
 
-if (-not (Test-Path $Jar)) { throw "Certifica-32bits.jar not found at $Jar" }
+if (-not (Test-Path $Jar)) { throw "Certifica-64bits.jar not found at $Jar" }
 if (-not (Test-Path $HashFile)) { throw "Hash file not found at $HashFile" }
 
 $ExpectedHash = (Get-Content $HashFile | Select-Object -First 1).Split(' ')[0].Trim()
@@ -43,7 +43,7 @@ $JavaHome = Get-JavaHome
 Write-Host "[launcher] Using JDK: $JavaHome"
 Push-Location $AppDir
 try {
-    & (Join-Path $JavaHome 'bin\java.exe') -jar 'Certifica-32bits.jar' @args
+    & (Join-Path $JavaHome 'bin\java.exe') -jar 'Certifica-64bits.jar' @args
 } finally {
     Pop-Location
 }

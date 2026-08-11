@@ -2,7 +2,7 @@ Certifica (SAT México) — paquete portable
 ============================================
 
 Este paquete incluye TODO lo necesario para ejecutar la aplicación:
-la app (Certifica-32bits.jar) y su propio Java (carpeta jre/).
+la app (Certifica-64bits.jar) y su propio Java (carpeta jre/).
 No necesitas instalar Java ni nada más.
 
 macOS

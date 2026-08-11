@@ -2,8 +2,8 @@
 setlocal EnableExtensions
 set "ROOT=%~dp0"
 set "APPDIR=%ROOT%certifica-jar"
-set "JAR=%APPDIR%\Certifica-32bits.jar"
-set "HASHFILE=%APPDIR%\Certifica-32bits.jar.sha256"
+set "JAR=%APPDIR%\Certifica-64bits.jar"
+set "HASHFILE=%APPDIR%\Certifica-64bits.jar.sha256"
 set "JAVA=%ROOT%jre\bin\java.exe"
 
 if not exist "%JAR%" (
@@ -24,5 +24,5 @@ if /i not "%EXPECTED%"=="%ACTUAL%" (
 echo [Certifica] Integridad verificada (SHA-256 OK)
 
 cd /d "%APPDIR%"
-"%JAVA%" -jar Certifica-32bits.jar %*
+"%JAVA%" -jar Certifica-64bits.jar %*
 endlocal
