@@ -19,7 +19,7 @@ En Apple Silicon se requiere Rosetta 2 (una sola vez): `softwareupdate --install
 ./make-dist.sh [version]   # escribe dist/*.zip + dist/SHA256SUMS
 ```
 
-`make-dist.sh` verifica el SHA-256 del jar, descarga Temurin JRE 8 x64 (mac + windows) desde Adoptium verificando checksums, y arma cada zip con `jre/ + certifica-jar/ + launcher + LEEME.txt`. Subir los zips y `SHA256SUMS` como assets del Release en GitHub.
+`make-dist.sh` verifica el SHA-256 del jar, descarga Temurin JRE 8 x64 (mac + windows) desde Adoptium verificando checksums, y arma cada zip con `jre/ + certifica-jar/ + launcher + LEEME.txt`. Para publicar: `./release.sh <version>` (requiere `gh auth login`; usa `--dry-run` para simular). Sube los zips y `SHA256SUMS` como assets del Release en GitHub.
 
 ## Launchers del repo (descargan el JDK la primera vez)
 
