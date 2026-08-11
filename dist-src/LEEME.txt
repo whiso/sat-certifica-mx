@@ -1,0 +1,31 @@
+Certifica (SAT México) — paquete portable
+============================================
+
+Este paquete incluye TODO lo necesario para ejecutar la aplicación:
+la app (Certifica-32bits.jar) y su propio Java (carpeta jre/).
+No necesitas instalar Java ni nada más.
+
+macOS
+-----
+1. Descomprime el zip.
+2. Doble clic en "run.command".
+   - Si Gatekeeper lo bloquea: clic derecho sobre run.command → Abrir → Abrir.
+3. En Macs con Apple Silicon (M1/M2/M3/M4) se requiere Rosetta 2.
+   Si no lo tienes, instálalo una sola vez con:
+       softwareupdate --install-rosetta --agree-to-license
+
+Windows
+-------
+1. Descomprime el zip (clic derecho → Extraer todo).
+2. Doble clic en "run.bat".
+   - Si SmartScreen muestra una advertencia: "Más información" → "Ejecutar de todas formas".
+   - Se requiere Windows de 64 bits.
+
+Notas
+-----
+- El launcher verifica la integridad del jar (SHA-256) antes de ejecutarlo.
+  Si la verificación falla, re-descarga el paquete completo.
+- No muevas ni borres las carpetas jre/ o certifica-jar/; el launcher
+  las necesita a un lado del archivo run.command / run.bat.
+- Problemas: consulta el repositorio del proyecto (sección Troubleshooting
+  del README).

@@ -2,7 +2,28 @@
 
 Launcher para `certifica-jar/Certifica-32bits.jar` (SAT), app Java 8 legacy con Swing/SWT, en Apple Silicon y Windows.
 
-## macOS
+## Descarga directa (recomendado para usuarios)
+
+Paquetes portables con Java incluido (Temurin JRE 8 x64): no instalan nada, no requieren internet al ejecutar.
+
+1. Descarga el zip para tu sistema desde [Releases](../../releases):
+   - macOS: `Certifica-macOS-x64.zip`
+   - Windows: `Certifica-Windows-x64.zip`
+2. Descomprime y ejecuta `run.command` (macOS) o `run.bat` (Windows). Ver `LEEME.txt` dentro del zip.
+
+En Apple Silicon se requiere Rosetta 2 (una sola vez): `softwareupdate --install-rosetta --agree-to-license`.
+
+### Generar los zips (maintainers)
+
+```bash
+./make-dist.sh [version]   # escribe dist/*.zip + dist/SHA256SUMS
+```
+
+`make-dist.sh` verifica el SHA-256 del jar, descarga Temurin JRE 8 x64 (mac + windows) desde Adoptium verificando checksums, y arma cada zip con `jre/ + certifica-jar/ + launcher + LEEME.txt`. Subir los zips y `SHA256SUMS` como assets del Release en GitHub.
+
+## Launchers del repo (descargan el JDK la primera vez)
+
+### macOS
 
 ```bash
 ./launcher.sh
@@ -18,11 +39,11 @@ El launcher:
 - Quita flag `com.apple.quarantine` de `Certifica-32bits.jar`.
 - Verifica integridad del jar contra `certifica-jar/Certifica-32bits.jar.sha256` (SHA-256) antes de ejecutarlo. Si falla, aborta con error.
 
-### Por qué JDK 8 x64 + Rosetta
+#### Por qué JDK 8 x64 + Rosetta
 
 El jar incluye JNA (`libjnidispatch.jnilib` i386/x86_64/ppc, sin arm64) y SWT/DJ Native Swing. JVM nativo arm64 crashea con `UnsatisfiedLinkError`. Con JDK 8 x64 bajo Rosetta funciona: GUI Aqua, acceso a archivos y generación de llave con mouse.
 
-### JDK alternativo
+#### JDK alternativo
 
 ```bash
 CERTIFICA_JAVA_HOME=/ruta/al/jdk/Contents/Home ./launcher.sh
@@ -30,7 +51,7 @@ CERTIFICA_JAVA_HOME=/ruta/al/jdk/Contents/Home ./launcher.sh
 
 Temurin (OpenJDK, GPLv2+CE) es suficiente: la app no usa JavaFX ni extensiones propietarias de Oracle, y el crypto ilimitado está activo por defecto desde JDK 8u161. Se usa Temurin exclusivamente para evitar la licencia OTN de Oracle (no redistribuible).
 
-## Windows (scaffold)
+### Windows (scaffold)
 
 ```bat
 certifica-jar\run.bat
