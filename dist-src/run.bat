@@ -2,27 +2,33 @@
 setlocal EnableExtensions
 set "ROOT=%~dp0"
 set "APPDIR=%ROOT%certifica-jar"
-set "JAR=%APPDIR%\Certifica-64bits.jar"
-set "HASHFILE=%APPDIR%\Certifica-64bits.jar.sha256"
 set "JAVA=%ROOT%jre\bin\java.exe"
 
-if not exist "%JAR%" (
-  echo [Certifica] ERROR: no se encuentra %JAR%
+if not exist "%APPDIR%\Certifica-64bits.jar" (
+  echo [Certifica] ERROR: no se encuentra certifica-jar\Certifica-64bits.jar
   exit /b 1
 )
 if not exist "%JAVA%" (
-  echo [Certifica] ERROR: no se encuentra el JRE incluido. Re-descarga el paquete completo.
+  echo [Certifica] ERROR: no se encuentra el JRE incluido (jre\bin\java.exe). Re-descarga el paquete completo.
   exit /b 1
 )
 
-for /f "usebackq tokens=1" %%a in (`"%HASHFILE%"`) do set "EXPECTED=%%a"
-for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "(Get-FileHash -Algorithm SHA256 '%JAR%').Hash.ToLowerInvariant()"`) do set "ACTUAL=%%i"
+cd /d "%APPDIR%" || exit /b 1
+
+set "EXPECTED="
+for /f "usebackq tokens=1" %%a in ("Certifica-64bits.jar.sha256") do set "EXPECTED=%%a"
+
+set "ACTUAL="
+for /f "delims=" %%i in ('certutil -hashfile Certifica-64bits.jar SHA256 ^| findstr /v ":"') do call set "ACTUAL=%%ACTUAL%%%%i"
+set "ACTUAL=%ACTUAL: =%"
+
 if /i not "%EXPECTED%"=="%ACTUAL%" (
   echo [Certifica] ERROR: verificacion SHA-256 FALLO. El jar esta corrupto o fue modificado. Re-descarga el paquete.
+  echo [Certifica] esperado: %EXPECTED%
+  echo [Certifica] obtenido: %ACTUAL%
   exit /b 1
 )
 echo [Certifica] Integridad verificada (SHA-256 OK)
 
-cd /d "%APPDIR%"
 "%JAVA%" -jar Certifica-64bits.jar %*
 endlocal

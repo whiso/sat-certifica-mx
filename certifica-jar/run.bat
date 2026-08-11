@@ -18,16 +18,16 @@ if not exist "%APP%\Certifica-64bits.jar.sha256" (
     exit /b 1
 )
 
-for /f "usebackq delims=" %%H in ("%APP%\Certifica-64bits.jar.sha256") do set "EXPECTED=%%H"
-set "EXPECTED=%EXPECTED: =%"
-set "EXPECTED=%EXPECTED:Certifica-64bits.jar=%"
+for /f "usebackq tokens=1" %%H in ("%APP%\Certifica-64bits.jar.sha256") do set "EXPECTED=%%H"
 
 set "ACTUAL="
-for /f "usebackq delims=" %%H in (`certutil -hashfile "%APP%\Certifica-64bits.jar" SHA256 ^| findstr /r "^[0-9a-f][0-9a-f]*$"`) do set "ACTUAL=%%H"
+for /f "delims=" %%H in (`certutil -hashfile "%APP%\Certifica-64bits.jar" SHA256 ^| findstr /v ":"`) do call set "ACTUAL=%%ACTUAL%%%%H"
 set "ACTUAL=%ACTUAL: =%"
 
 if /i not "%EXPECTED%"=="%ACTUAL%" (
     echo [launcher] ERROR: Hash verification FAILED. Jar corrupt or modified.
+    echo [launcher] expected: %EXPECTED%
+    echo [launcher] actual:   %ACTUAL%
     exit /b 1
 )
 echo [launcher] Hash OK
