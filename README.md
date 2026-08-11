@@ -18,10 +18,16 @@ En Apple Silicon se requiere Rosetta 2 (una sola vez): `softwareupdate --install
 ### Generar los zips (maintainers)
 
 ```bash
-./make-dist.sh [version]   # escribe dist/*.zip + dist/SHA256SUMS
+./make-dist.sh [version]   # escribe dist/*.zip + dist/SHA256SUMS (macOS, arma ambos zips)
 ```
 
-`make-dist.sh` verifica el SHA-256 del jar, descarga Temurin JRE 8 x64 (mac + windows) desde Adoptium verificando checksums, y arma cada zip con `jre/ + certifica-jar/ + launcher + LEEME.txt`. Para publicar: `./release.sh <version>` (requiere `gh auth login`; usa `--dry-run` para simular). Sube los zips y `SHA256SUMS` como assets del Release en GitHub.
+En Windows, el equivalente arma solo el zip de Windows:
+
+```bat
+powershell -ExecutionPolicy Bypass -File make-dist.ps1 [-Version 1.0.0]
+```
+
+`make-dist.sh` verifica el SHA-256 del jar, descarga Temurin JRE 8 x64 (mac + windows) desde Adoptium verificando checksums, y arma cada zip con `jre/ + certifica-jar/ + launcher + LEEME.txt`. `make-dist.ps1` hace lo mismo para Windows (PowerShell 5+; probado con pwsh 7). Para publicar: `./release.sh <version>` (requiere `gh auth login`; usa `--dry-run` para simular). Sube los zips y `SHA256SUMS` como assets del Release en GitHub. Nota: cada builder regenera `SHA256SUMS` con los zips presentes en `dist/`.
 
 ## Launchers del repo (descargan el JDK la primera vez)
 
