@@ -18,6 +18,7 @@ El launcher:
   5. Descarga Temurin JDK 8 x64 desde Adoptium a `.cache/`
 - Rechaza JDK arm64: los libs nativos JNA del jar no tienen slice arm64; el JVM debe ser x64 bajo Rosetta.
 - Quita flag `com.apple.quarantine` de `Certifica-32bits.jar`.
+- Verifica integridad del jar contra `certifica-jar/Certifica-32bits.jar.sha256` (SHA-256) antes de ejecutarlo. Si falla, aborta con error.
 
 ### Por qué JDK 8 x64 + Rosetta
 
@@ -40,6 +41,25 @@ powershell -ExecutionPolicy Bypass -File launcher.ps1
 ```
 
 Mismo orden de búsqueda de JDK: `CERTIFICA_JAVA_HOME` → `.cache\jdk8-x64\` (Temurin win x64) → `java` del PATH. El jar trae los libs JNA/SWT win32-x86-64, por lo que debería correr sin cambios. No probado aún.
+
+## Verificación de integridad
+
+El launcher verifica el SHA-256 del jar antes de ejecutar. Archivo de hash: `certifica-jar/Certifica-32bits.jar.sha256`.
+
+Regenerar tras reemplazar el jar:
+
+```bash
+cd certifica-jar
+shasum -a 256 Certifica-32bits.jar > Certifica-32bits.jar.sha256
+```
+
+Verificación manual:
+
+```bash
+cd certifica-jar && shasum -a 256 -c Certifica-32bits.jar.sha256
+```
+
+Windows (PowerShell): `Get-FileHash -Algorithm SHA256 certifica-jar\Certifica-32bits.jar`
 
 ## Docker
 

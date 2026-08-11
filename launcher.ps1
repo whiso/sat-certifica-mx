@@ -4,11 +4,20 @@ $ErrorActionPreference = 'Stop'
 $Root    = Split-Path -Parent $MyInvocation.MyCommand.Path
 $AppDir  = Join-Path $Root 'certifica-jar'
 $Jar     = Join-Path $AppDir 'Certifica-32bits.jar'
+$HashFile = Join-Path $AppDir 'Certifica-32bits.jar.sha256'
 $Cache   = Join-Path $Root '.cache'
 $JdkCache = Join-Path $Cache 'jdk8-x64'
 $AdoptiumApi = 'https://api.adoptium.net/v3/binary/latest/8/ga/windows/x64/jdk/hotspot/normal/eclipse'
 
 if (-not (Test-Path $Jar)) { throw "Certifica-32bits.jar not found at $Jar" }
+if (-not (Test-Path $HashFile)) { throw "Hash file not found at $HashFile" }
+
+$ExpectedHash = (Get-Content $HashFile | Select-Object -First 1).Split(' ')[0].Trim()
+$ActualHash = (Get-FileHash -Algorithm SHA256 $Jar).Hash.ToLowerInvariant()
+if ($ExpectedHash -ne $ActualHash) {
+    throw "Hash verification FAILED. $Jar is corrupt or was modified. Expected $ExpectedHash, got $ActualHash."
+}
+Write-Host '[launcher] Hash OK'
 
 function Get-JavaHome {
     if ($env:CERTIFICA_JAVA_HOME) {

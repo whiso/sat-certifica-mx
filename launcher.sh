@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_DIR="$SCRIPT_DIR/certifica-jar"
 JAR="$APP_DIR/Certifica-32bits.jar"
+HASH_FILE="$APP_DIR/Certifica-32bits.jar.sha256"
 CACHE_DIR="$SCRIPT_DIR/.cache"
 JDK_CACHE="$CACHE_DIR/jdk8-x64"
 ORACLE_TARBALL="$SCRIPT_DIR/jdk-8u501-macosx-x64.tar.gz"
@@ -66,6 +67,12 @@ find_jdk() {
 }
 
 [ -f "$JAR" ] || die "Certifica-32bits.jar not found at $JAR"
+[ -f "$HASH_FILE" ] || die "Hash file not found at $HASH_FILE"
+
+if ! (cd "$APP_DIR" && shasum -a 256 -c Certifica-32bits.jar.sha256 >/dev/null 2>&1); then
+  die "Hash verification FAILED. $JAR is corrupt or was modified. Re-download the original jar or regenerate the hash."
+fi
+warn "Hash OK"
 
 if xattr "$JAR" 2>/dev/null | grep -q quarantine; then
   warn "Stripping quarantine flag from $JAR"
