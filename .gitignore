@@ -1,0 +1,6 @@
+.cache/
+jdk1.8.0_501.jdk/
+jdk-8u501-macosx-x64.tar.gz
+launcher.ps1
+.DS_Store
+.kilocode/
