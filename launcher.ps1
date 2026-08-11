@@ -27,8 +27,6 @@ function Get-JavaHome {
         return $env:CERTIFICA_JAVA_HOME
     }
     if (Test-Path (Join-Path $JdkCache 'bin\java.exe')) { return $JdkCache }
-    $oracle = Join-Path $Root 'jdk1.8.0_501\jre'
-    if (Test-Path (Join-Path $oracle 'bin\java.exe')) { return $oracle }
 
     Write-Host '[launcher] Downloading Temurin JDK 8 (x64) for Windows...'
     New-Item -ItemType Directory -Force -Path $Cache | Out-Null

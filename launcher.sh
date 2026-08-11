@@ -7,8 +7,6 @@ JAR="$APP_DIR/Certifica-32bits.jar"
 HASH_FILE="$APP_DIR/Certifica-32bits.jar.sha256"
 CACHE_DIR="$SCRIPT_DIR/.cache"
 JDK_CACHE="$CACHE_DIR/jdk8-x64"
-ORACLE_TARBALL="$SCRIPT_DIR/jdk-8u501-macosx-x64.tar.gz"
-ORACLE_HOME="$SCRIPT_DIR/jdk1.8.0_501.jdk/Contents/Home"
 ADOPTIUM_API="https://api.adoptium.net/v3/binary/latest/8/ga/mac/x64/jdk/hotspot/normal/eclipse"
 
 warn() { echo "[launcher] $*" >&2; }
@@ -50,17 +48,6 @@ find_jdk() {
   fi
   if [ -x "$JDK_CACHE/Contents/Home/bin/java" ]; then
     echo "$JDK_CACHE/Contents/Home"
-    return
-  fi
-  if [ -x "$ORACLE_HOME/jre/bin/java" ]; then
-    echo "$ORACLE_HOME"
-    return
-  fi
-  if [ -f "$ORACLE_TARBALL" ]; then
-    warn "Extracting bundled Oracle JDK 8..."
-    tar -xzf "$ORACLE_TARBALL" -C "$SCRIPT_DIR"
-    [ -x "$ORACLE_HOME/jre/bin/java" ] || die "Oracle tarball extraction failed."
-    echo "$ORACLE_HOME"
     return
   fi
   download_jdk

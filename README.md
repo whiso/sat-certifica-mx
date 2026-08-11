@@ -13,9 +13,7 @@ El launcher:
 - Busca JDK 8 **x64** en este orden:
   1. `$CERTIFICA_JAVA_HOME` (override explícito)
   2. `.cache/jdk8-x64/` (Temurin ya descargado)
-  3. `jdk1.8.0_501.jdk/` (JDK de Oracle local, si está presente)
-  4. `jdk-8u501-macosx-x64.tar.gz` (lo extrae automáticamente)
-  5. Descarga Temurin JDK 8 x64 desde Adoptium a `.cache/`
+  3. Descarga Temurin JDK 8 x64 desde Adoptium a `.cache/`
 - Rechaza JDK arm64: los libs nativos JNA del jar no tienen slice arm64; el JVM debe ser x64 bajo Rosetta.
 - Quita flag `com.apple.quarantine` de `Certifica-32bits.jar`.
 - Verifica integridad del jar contra `certifica-jar/Certifica-32bits.jar.sha256` (SHA-256) antes de ejecutarlo. Si falla, aborta con error.
@@ -30,7 +28,7 @@ El jar incluye JNA (`libjnidispatch.jnilib` i386/x86_64/ppc, sin arm64) y SWT/DJ
 CERTIFICA_JAVA_HOME=/ruta/al/jdk/Contents/Home ./launcher.sh
 ```
 
-Temurin (OpenJDK) es suficiente: la app no usa JavaFX ni extensiones propietarias de Oracle, y el crypto ilimitado está activo por defecto desde JDK 8u161. Oracle 8u501 tiene licencia OTN (no redistribuible); Temurin es GPLv2+CE.
+Temurin (OpenJDK, GPLv2+CE) es suficiente: la app no usa JavaFX ni extensiones propietarias de Oracle, y el crypto ilimitado está activo por defecto desde JDK 8u161. Se usa Temurin exclusivamente para evitar la licencia OTN de Oracle (no redistribuible).
 
 ## Windows (scaffold)
 
