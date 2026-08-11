@@ -1,6 +1,6 @@
 @echo off
 rem Windows launcher (scaffold). Prefer launcher.ps1.
-setlocal EnableExtensions EnableDelayedExpansion
+setlocal EnableExtensions
 set ROOT=%~dp0..
 set APP=%ROOT%\certifica-jar
 set CACHE=%ROOT%\.cache
@@ -13,24 +13,12 @@ if not exist "%APP%\Certifica-64bits.jar" (
     echo [launcher] ERROR: Certifica-64bits.jar not found
     exit /b 1
 )
-if not exist "%APP%\Certifica-64bits.jar.sha256" (
-    echo [launcher] ERROR: hash file not found
-    exit /b 1
-)
 
-for /f "usebackq tokens=1" %%H in ("%APP%\Certifica-64bits.jar.sha256") do set "EXPECTED=%%H"
-
-set "ACTUAL="
-for /f "delims=" %%H in (`certutil -hashfile "%APP%\Certifica-64bits.jar" SHA256 ^| findstr /v ":"`) do set "ACTUAL=!ACTUAL!%%H"
-set "ACTUAL=!ACTUAL: =!"
-
-if /i not "!EXPECTED!"=="!ACTUAL!" (
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%\dist-src\check-hash.ps1" -AppDir "%APP%"
+if errorlevel 1 (
     echo [launcher] ERROR: Hash verification FAILED. Jar corrupt or modified.
-    echo [launcher] expected: !EXPECTED!
-    echo [launcher] actual:   !ACTUAL!
     exit /b 1
 )
-echo [launcher] Hash OK
 
 pushd "%APP%"
 "%JAVA%" -jar Certifica-64bits.jar %*

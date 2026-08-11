@@ -91,10 +91,13 @@ Copy-Item $Jar      (Join-Path $Stage 'certifica-jar\Certifica-64bits.jar')
 Copy-Item $HashFile (Join-Path $Stage 'certifica-jar\Certifica-64bits.jar.sha256')
 Copy-Item (Join-Path $SrcDir 'LEEME.txt') (Join-Path $Stage 'LEEME.txt')
 
-# run.bat del repo puede tener finales de linea LF; convertir a CRLF
-$BatRaw = Get-Content -Raw -Path (Join-Path $SrcDir 'run.bat')
+# run.bat / check-hash.ps1 del repo pueden tener finales de linea LF; convertir a CRLF
+$BatRaw  = Get-Content -Raw -Path (Join-Path $SrcDir 'run.bat')
 $BatCrlf = $BatRaw -replace "`r`n", "`n" -replace "`n", "`r`n"
 [System.IO.File]::WriteAllText((Join-Path $Stage 'run.bat'), $BatCrlf, [System.Text.Encoding]::ASCII)
+$PsRaw  = Get-Content -Raw -Path (Join-Path $SrcDir 'check-hash.ps1')
+$PsCrlf = $PsRaw -replace "`r`n", "`n" -replace "`n", "`r`n"
+[System.IO.File]::WriteAllText((Join-Path $Stage 'check-hash.ps1'), $PsCrlf, [System.Text.Encoding]::ASCII)
 
 Log "Armando $Name.zip..."
 $ZipPath = Join-Path $DistDir "$Name.zip"

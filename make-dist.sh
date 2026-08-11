@@ -93,6 +93,7 @@ build_win() {
   mv "$jre" "$stage/jre"
   copy_app "$stage"
   awk '{ printf "%s\r\n", $0 }' "$SRC_DIR/run.bat" > "$stage/run.bat"
+  awk '{ printf "%s\r\n", $0 }' "$SRC_DIR/check-hash.ps1" > "$stage/check-hash.ps1"
 
   (cd "$BUILD_DIR" && zip -qry "$DIST_DIR/$name.zip" "$name")
   rm -rf "$stage" "$tmp" "$archive"
